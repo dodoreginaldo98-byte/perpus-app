@@ -1,55 +1,70 @@
 <script setup>
-// Layout dashboard dari Pertemuan 5 (lengkap dengan Sidebar)
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
-// 'books' menerima data dari BookController@index (Langkah 4)
-defineProps({
+const props = defineProps({
     books: Object,
+    // Kata kunci terakhir yang dikirim dari controller (Langkah 7)
+    search: String,
 });
+
+// Nilai awal kotak pencarian diisi dari props.search, bukan selalu kosong
+const keyword = ref(props.search);
+
+// Dijalankan saat pengguna menekan Enter pada kotak pencarian.
+// router.get mengarahkan ke /books?search=..., memicu index() di Langkah 7
+function cari() {
+    router.get('/books', { search: keyword.value });
+}
+
+function hapus(id) {
+    if (confirm('Yakin ingin menghapus buku ini?')) {
+        router.delete(route('books.destroy', id));
+    }
+}
 </script>
 
 <template>
     <AuthenticatedLayout>
-        <div class="p-6">
-            <div class="flex items-center justify-between mb-4">
-                <h1 class="text-2xl font-bold">Data Buku</h1>
+        <h1>Data Buku</h1>
 
-                <!-- Menuju form tambah buku: Books/Create.vue (Langkah 7) -->
-                <Link
-                    href="/books/create"
-                    class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
-                >
-                    + Tambah Buku
-                </Link>
-            </div>
-
-            <table class="w-full border border-collapse border-gray-300">
-                <thead class="bg-gray-100">
-                    <tr>
-                        <th class="px-4 py-2 text-left border">Kode</th>
-                        <th class="px-4 py-2 text-left border">Judul</th>
-                        <th class="px-4 py-2 text-left border">Pengarang</th>
-                        <th class="px-4 py-2 text-left border">Stok</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- v-for mengulang setiap data buku, seperti foreach -->
-                    <tr v-for="book in books.data" :key="book.id">
-                        <td class="px-4 py-2 border">{{ book.kode_buku }}</td>
-                        <td class="px-4 py-2 border">{{ book.judul }}</td>
-                        <td class="px-4 py-2 border">{{ book.pengarang }}</td>
-                        <td class="px-4 py-2 border">{{ book.stok }}</td>
-                    </tr>
-
-                    <!-- Tampil jika belum ada data -->
-                    <tr v-if="books.data.length === 0">
-                        <td colspan="4" class="px-4 py-4 text-center text-gray-500">
-                            Belum ada data buku.
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div v-if="$page.props.flash?.success">
+            {{ $page.props.flash.success }}
         </div>
+
+        <Link href="/books/create">+ Tambah Buku</Link>
+
+        <!-- @keyup.enter memanggil function cari() hanya saat tombol Enter ditekan -->
+        <input
+            v-model="keyword"
+            @keyup.enter="cari"
+            type="text"
+            placeholder="Cari judul atau pengarang..."
+        >
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Kode</th>
+                    <th>Judul</th>
+                    <th>Pengarang</th>
+                    <th>Stok</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="book in books.data" :key="book.id">
+                    <td>{{ book.kode_buku }}</td>
+                    <td>{{ book.judul }}</td>
+                    <td>{{ book.pengarang }}</td>
+                    <td>{{ book.stok }}</td>
+                    <td>
+                        <Link :href="`/books/${book.id}/edit`">Edit</Link>
+                        <button @click="hapus(book.id)">Hapus</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </AuthenticatedLayout>
 </template>
