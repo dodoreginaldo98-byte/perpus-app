@@ -13,7 +13,8 @@ class MemberController extends Controller
     // Mengambil data anggota; jika ada kata kunci, filter berdasarkan nama ATAU NIS/NIM
     $members = Member::when($request->search, function ($query, $search) {
         $query->where('nama', 'like', "%{$search}%")
-              ->orWhere('nis_nim', 'like', "%{$search}%");
+              ->orWhere('nis_nim', 'like', "%{$search}%")
+                 ->orWhere('no_hp', 'like', "%{$search}%");
     })->latest()->paginate(10)->withQueryString();
 
     return inertia('Members/Index', [
@@ -34,8 +35,8 @@ public function store(Request $request)
     $validated = $request->validate([
         'nama'    => 'required|max:255',
         'nis_nim' => 'required|max:50|unique:members',
-        'no_hp'   => 'nullable|max:20',
-        'foto'    => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+       'no_hp' => 'nullable|digits_between:8,15',
+        'foto'    => 'nullable|image|mimes:jpg,jpeg,png|max:1024',
     ]);
 
     // 2. Jika ada berkas foto yang diunggah, simpan ke storage/app/public/members
@@ -68,7 +69,7 @@ public function update(Request $request, Member $member)
         'nama'    => 'required|max:255',
         'nis_nim' => 'required|max:50|unique:members,nis_nim,' . $member->id,
         'no_hp'   => 'nullable|max:20',
-        'foto'    => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'foto'    => 'nullable|image|mimes:jpg,jpeg,png|max:1024',
     ]);
 
     if ($request->hasFile('foto')) {

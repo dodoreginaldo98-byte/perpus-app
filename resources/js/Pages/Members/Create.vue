@@ -51,7 +51,7 @@ function submit() {
                 </div>
 
                 <div>
-                    <label class="block">Foto (JPG/PNG, maksimal 2 MB)</label>
+                    <label class="block">Foto (JPG/PNG, maksimal 1 MB)</label>
                     <!-- Input berkas tidak bisa memakai v-model, sehingga memakai @change -->
                     <input type="file" accept="image/png, image/jpeg" @change="pilihFoto">
                     <div v-if="form.errors.foto" class="text-red-600">{{ form.errors.foto }}</div>

@@ -38,7 +38,7 @@ function hapus(id) {
                     v-model="keyword"
                     @keyup.enter="cari"
                     type="text"
-                    placeholder="Cari nama atau NIS/NIM..."
+                    placeholder="Cari nama, NIS/NIM, atau No.Hp..."
                 >
             </div>
 
