@@ -8,6 +8,7 @@ protected $fillable = [
  'nama',
  'nis_nim',
  'no_hp',
+ 'foto',
  ];
  use HasFactory;
  public function loans()

@@ -3,44 +3,20 @@ import { Link } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <aside class="flex flex-col w-64 min-h-screen text-white bg-indigo-900">
+    <aside class="w-64 bg-gray-800 text-white min-h-screen p-4 flex-shrink-0">
+        <h2 class="text-lg font-bold mb-4">Perpustakaan Mini</h2>
 
-        <!-- Header Sidebar -->
-        <div class="flex items-center justify-center h-16 border-b border-indigo-800">
-            <span class="text-xl font-bold">Perpus App</span>
-        </div>
+        <nav class="space-y-2">
+            <Link href="/dashboard" class="block hover:text-gray-300">Dashboard</Link>
+            <Link href="/" class="block hover:text-gray-300">Beranda</Link>
 
-        <!-- Menu Navigasi -->
-        <nav class="flex-1 px-4 py-6 space-y-2">
-            <Link
-                href="/dashboard"
-                class="block px-4 py-2 transition-colors rounded hover:bg-indigo-800"
-            >
-                Dashboard
-            </Link>
+            <!-- Baris baru: menu menuju daftar buku, href harus sama dengan
+                 Route::resource pada Langkah 3 -->
+            <Link href="/books" class="block hover:text-gray-300">Data Buku</Link>
 
-            <Link
-                href="/"
-                class="block px-4 py-2 transition-colors rounded hover:bg-indigo-800"
-            >
-                Beranda
-            </Link>
-
-            <!-- Menu baru dari modul: href harus sama dengan Route::resource (Langkah 3) -->
-            <Link
-                href="/books"
-                class="block px-4 py-2 transition-colors rounded hover:bg-indigo-800"
-            >
-                Data Buku
-            </Link>
-
-            <Link
-                href="/members"
-                class="block px-4 py-2 transition-colors rounded hover:bg-indigo-800"
-            >
-                Data Anggota
-            </Link>
+            <!-- Baris baru: menu menuju daftar anggota, href harus sama dengan
+                 Route::resource('members', ...) -->
+            <Link href="/members" class="block hover:text-gray-300">Data Anggota</Link>
         </nav>
-
     </aside>
 </template>
