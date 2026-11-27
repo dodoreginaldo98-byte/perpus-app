@@ -35,6 +35,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
      Route::resource('books', BookController::class);
      Route::resource('members', MemberController::class);
+
+   Route::get('/cari-buku', [BookController::class, 'search'])->name('books.search');
+
+   Route::get('/cari-anggota', [MemberController::class, 'search'])->name('members.search');
+
+   Route::get('/cek-nis-anggota', [MemberController::class, 'cekNis'])->name('members.cek-nis');
+   
+    Route::resource('books', BookController::class);
+    Route::resource('members', MemberController::class);
+
 });
 
 require __DIR__.'/auth.php';

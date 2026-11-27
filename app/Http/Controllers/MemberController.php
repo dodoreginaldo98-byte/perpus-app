@@ -61,6 +61,47 @@ public function edit(Member $member)
     ]);
 }
 
+public function search(Request $request)
+{
+    // Kata kunci dibaca dari URL, misalnya /members/search?q=ani
+    $kataKunci = $request->query('q', '');
+
+    // nama ATAU nis_nim yang cocok, maksimal 10 baris
+    $members = Member::where(function ($query) use ($kataKunci) {
+            $query->where('nama', 'like', "%{$kataKunci}%")
+                  ->orWhere('nis_nim', 'like', "%{$kataKunci}%");
+        })
+        ->latest()
+        ->limit(10)
+        ->get(['id', 'nama', 'nis_nim', 'no_hp', 'foto']);
+
+    return response()->json($members);
+}
+
+
+public function cekNis(Request $request)
+{
+    // NIS/NIM yang sedang diketik, misalnya /members/cek-nis?nis_nim=2023001
+    $nisNim = $request->query('nis_nim', '');
+
+    // abaikan = id anggota yang sedang diedit (kosong pada form tambah)
+    $abaikanId = $request->query('abaikan');
+
+    // Apakah ada anggota lain yang sudah memakai NIS/NIM ini?
+    $sudahDipakai = Member::where('nis_nim', $nisNim)
+        ->when($abaikanId, function ($query, $id) {
+            // Jika ada id yang diabaikan, jangan hitung anggota itu sendiri
+            $query->where('id', '!=', $id);
+        })
+        ->exists();
+
+    // Dibalas sebagai JSON, misalnya {"tersedia":true}
+    return response()->json([
+        'tersedia' => ! $sudahDipakai,
+    ]);
+}
+
+
 public function update(Request $request, Member $member)
 {
     // Aturan sama seperti store(), dengan pengecualian unique agar NIS/NIM milik sendiri

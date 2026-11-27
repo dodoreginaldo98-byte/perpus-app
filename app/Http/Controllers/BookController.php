@@ -23,8 +23,30 @@ class BookController extends Controller
         'books' => $books,
         // Dikirim balik ke Vue agar kotak pencarian tetap terisi
         'search' => $request->search,
-    ]);
+    ]); 
+
+    
 }
+
+public function search(Request $request)
+{
+    // Kata kunci dibaca dari URL, misalnya /books/search?q=laravel
+    $kataKunci = $request->query('q', '');
+
+    // Dua kondisi (judul ATAU pengarang) dikelompokkan di dalam satu closure,
+    // lalu diambil maksimal 10 baris dengan kolom yang diperlukan saja
+    $books = Book::where(function ($query) use ($kataKunci) {
+            $query->where('judul', 'like', "%{$kataKunci}%")
+                  ->orWhere('pengarang', 'like', "%{$kataKunci}%");
+        })
+        ->latest()
+        ->limit(10)
+        ->get(['id', 'kode_buku', 'judul', 'pengarang', 'stok']);
+
+    // response()->json() mengirim data mentah (JSON), bukan halaman Inertia
+    return response()->json($books);
+}
+
  public function create()
  {
  return Inertia::render('Books/Create');
