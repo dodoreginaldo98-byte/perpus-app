@@ -41,6 +41,8 @@ Route::middleware('auth')->group(function () {
    Route::get('/cari-anggota', [MemberController::class, 'search'])->name('members.search');
 
    Route::get('/cek-nis-anggota', [MemberController::class, 'cekNis'])->name('members.cek-nis');
+
+  Route::get('/cek-kode-buku', [BookController::class, 'cekKode'])->name('books.cek-kode');
    
     Route::resource('books', BookController::class);
     Route::resource('members', MemberController::class);

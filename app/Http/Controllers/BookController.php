@@ -36,15 +36,30 @@ public function search(Request $request)
     // Dua kondisi (judul ATAU pengarang) dikelompokkan di dalam satu closure,
     // lalu diambil maksimal 10 baris dengan kolom yang diperlukan saja
     $books = Book::where(function ($query) use ($kataKunci) {
-            $query->where('judul', 'like', "%{$kataKunci}%")
-                  ->orWhere('pengarang', 'like', "%{$kataKunci}%");
-        })
-        ->latest()
-        ->limit(10)
-        ->get(['id', 'kode_buku', 'judul', 'pengarang', 'stok']);
+        $query->where('judul', 'like', "%{$kataKunci}%")
+              ->orWhere('pengarang', 'like', "%{$kataKunci}%")
+              ->orWhere('penerbit', 'like', "%{$kataKunci}%");
+    })
+    ->latest()
+    ->limit(10)
+    ->get(['id', 'kode_buku', 'judul', 'pengarang', 'penerbit', 'stok']);
 
     // response()->json() mengirim data mentah (JSON), bukan halaman Inertia
     return response()->json($books);
+}
+
+public function cekKode(Request $request)
+{
+    // Kode buku yang sedang diketik, misalnya /books/cek-kode?kode_buku=BK-101
+    $kodeBuku = $request->query('kode_buku', '');
+
+    // Apakah sudah ada buku yang memakai kode ini?
+    $sudahDipakai = Book::where('kode_buku', $kodeBuku)->exists();
+
+    // Dibalas sebagai JSON, misalnya {"tersedia":true}
+    return response()->json([
+        'tersedia' => ! $sudahDipakai,
+    ]);
 }
 
  public function create()

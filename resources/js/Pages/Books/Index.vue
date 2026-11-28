@@ -80,9 +80,9 @@ watch(keyword, (nilai) => {
     return;
   }
 
-  // Mulai hitungan mundur 300 milidetik; permintaan baru dikirim
+  // Mulai hitungan mundur 800 milidetik; permintaan baru dikirim
   // hanya jika pengguna berhenti mengetik
-  timer = setTimeout(ambilHasil, 300);
+  timer = setTimeout(ambilHasil, 800);
 });
 
 // Function dari Pertemuan 7, kini ditambah onSuccess agar hasil pencarian
@@ -128,7 +128,7 @@ onBeforeUnmount(() => {
     <input
       v-model="keyword"
       type="text"
-      placeholder="Ketik judul atau pengarang..."
+      placeholder="Ketik judul, pengarang atau penerbit..."
     >
 
     <!-- Penanda bahwa permintaan AJAX sedang berjalan -->
