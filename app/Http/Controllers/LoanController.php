@@ -71,6 +71,17 @@ class LoanController extends Controller
             ]);
         }
 
+        // Batasi satu anggota maksimal 3 buku yang sedang dipinjam
+$sedangDipinjam = Loan::where('member_id', $validated['member_id'])
+    ->where('status', 'dipinjam')
+    ->count();
+
+if ($sedangDipinjam >= 3) {
+    return back()->withErrors([
+        'member_id' => 'Anggota ini sudah meminjam 3 buku dan belum mengembalikan. Batas maksimal tercapai.',
+    ]);
+}
+
         // 3. Simpan peminjaman dan kurangi stok sebagai satu kesatuan.
         // Jika salah satu gagal, keduanya dibatalkan (tidak ada data setengah jadi).
         DB::transaction(function () use ($validated, $book) {
@@ -78,7 +89,7 @@ class LoanController extends Controller
                 'member_id' => $validated['member_id'],
                 'book_id' => $validated['book_id'],
                 'tanggal_pinjam' => now()->toDateString(),
-                'tanggal_kembali_rencana' => now()->addDays(7)->toDateString(),
+                'tanggal_kembali_rencana' => now()->addDays(14)->toDateString(),
                 'status' => 'dipinjam',
             ]);
 

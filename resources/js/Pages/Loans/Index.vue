@@ -28,6 +28,7 @@ defineProps({
         <thead>
           <tr>
             <th class="border px-3 py-2">Anggota</th>
+            <th class="border px-3 py-2">Kode Buku</th>
             <th class="border px-3 py-2">Buku</th>
             <th class="border px-3 py-2">Tanggal Pinjam</th>
             <th class="border px-3 py-2">Jatuh Tempo</th>
@@ -40,6 +41,7 @@ defineProps({
             <!-- loan.member.nama dan loan.book.judul tersedia karena -->
             <!-- LoanController memanggil with(['member', 'book']) -->
             <td class="border px-3 py-2">{{ loan.member.nama }}</td>
+            <td class="border px-3 py-2">{{ loan.book.kode_buku }}</td>
             <td class="border px-3 py-2">{{ loan.book.judul }}</td>
             <td class="border px-3 py-2">{{ loan.tanggal_pinjam }}</td>
             <td class="border px-3 py-2">{{ loan.tanggal_kembali_rencana }}</td>
@@ -55,7 +57,7 @@ defineProps({
 
           <!-- Pesan jika belum ada data peminjaman -->
           <tr v-if="loans.data.length === 0">
-            <td colspan="5" class="border px-3 py-2">
+            <td colspan="7" class="border px-3 py-2">
               Belum ada data peminjaman.
             </td>
           </tr>

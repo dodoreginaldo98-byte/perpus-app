@@ -61,7 +61,7 @@ function submit() {
         </div>
 
         <p class="text-gray-500">
-          Tanggal pinjam adalah hari ini. Jatuh tempo otomatis 7 hari setelah
+          Tanggal pinjam adalah hari ini. Jatuh tempo otomatis 14 hari setelah
           tanggal pinjam.
         </p>
 
